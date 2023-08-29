@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DetectCollision : MonoBehaviour
 {
-    private int totalCount = 0;
-    private int carCount = 0;
-    private int twoCount = 0;
+    public int totalCount = 0;
+    public int carCount = 0;
+    public int twoCount = 0;
     public bool isContact;
 
     // Start is called before the first frame update

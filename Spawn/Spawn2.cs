@@ -9,6 +9,7 @@ public class Spawn2 : MonoBehaviour
     public int vehicleSpawnNumber = 0;
 
     public GameObject[] vehiclePrefabs;
+    public int vehicleIndex;
     private GameObject vehicleObject;
 
     public Vector3 spawnPos = new Vector3(0, 0, 0);
@@ -27,12 +28,11 @@ public class Spawn2 : MonoBehaviour
     void Update() {
         if (player.transform.position.x < targetPositionX) {
             Debug.Log("over the target position");
-            vehicleObject.SetActive(true);
+            
             SpawnRandomVehicle();
-
         }
 
-        if (vehicleObject.transform.position.x < player.transform.position.x) {
+        if (vehicleObject != null && vehicleObject.transform.position.x < player.transform.position.x) {
             hmdOff2 = true;
         }
 
@@ -43,9 +43,10 @@ public class Spawn2 : MonoBehaviour
     }
 
     void SpawnRandomVehicle() {
-        int vehicleIndex = Random.Range(0, vehiclePrefabs.Length);
 
         if (vehicleSpawnNumber == 0) {
+            vehicleIndex = Random.Range(0, vehiclePrefabs.Length);
+            vehiclePrefabs[vehicleIndex].SetActive(true);
             vehicleObject = Instantiate(vehiclePrefabs[vehicleIndex], spawnPos, vehiclePrefabs[vehicleIndex].transform.rotation);
             vehicleSpawnNumber = 1;
         }

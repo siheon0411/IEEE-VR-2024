@@ -32,7 +32,7 @@ public class SpawnTaxi : MonoBehaviour
 
         }
 
-        if (carObject.transform.position.x < player.transform.position.x) {
+        if (carObject != null && carObject.transform.position.x < player.transform.position.x) {
             hmdOff = true;
         }
     }
