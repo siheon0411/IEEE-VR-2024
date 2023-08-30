@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class SpawnRepeat2 : MonoBehaviour
@@ -19,15 +20,18 @@ public class SpawnRepeat2 : MonoBehaviour
     private Vector3 spawnPos;
     private float spawnPosX;
     private float spawnPosY = 0;
-    private float spawnPosZ = 6.078f;
+    private float spawnPosZ;
+
+    public GameObject directionArrow;
 
     private bool isSpawned = false;
     public bool hmdOff2 = false;
     private bool isPassed = false;
+    private float timer = 0f;
+    private bool timerOn = false;
 
-    private float startDelay = 2.0f;
-    private float minSpawnInterval = 3.0f;
-    private float maxSpawnInterval = 8.0f;
+    private float minSpawnInterval = 2.0f;
+    private float maxSpawnInterval = 4.0f;
 
     public bool isGameOver = false;
 
@@ -52,18 +56,29 @@ public class SpawnRepeat2 : MonoBehaviour
         if (vehicleObject != null && vehicleObject.transform.position.x < player.transform.position.x) {
             HmdController hmd = player.GetComponent<HmdController>();
             hmd.Off(vehicleIndex);
+
+            Direction direction = directionArrow.GetComponent<Direction>();
+            direction.Off();
+
             isPassed = true;
+            if (!timerOn) {
+                timerOn = true;
+                float delaySeconds = Random.Range(minSpawnInterval, maxSpawnInterval);
+                Debug.Log(delaySeconds);
+
+                timer = Time.time + delaySeconds;
+            }
         }
 
-        if (isPassed) {
-            isSpawned = false;
-            float spawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
-            InvokeRepeating("SpawnRandomVehicle", startDelay, spawnInterval);
+        if (isPassed && Time.time >= timer) {
+            timerOn = false;
             isPassed = false;
+            isSpawned = false;
+            SpawnRandomVehicle();
         }
 
         // player가 엔드 포지션 넘어가면 게임 종료
-        if (player.transform.position.x < endPositionX) {
+        if (player.transform.position.x < endPositionX && !isGameOver) {
             isGameOver = true;
 
             Debug.Log("##### MISSION COMPLETE");
@@ -85,13 +100,18 @@ public class SpawnRepeat2 : MonoBehaviour
             vehiclePrefabs[vehicleIndex].SetActive(true);
 
             spawnPosX = player.transform.position.x + Random.Range(10, 30);
+            spawnPosZ = Random.Range(5.5f, 7.1f);
             spawnPos = new Vector3(spawnPosX, spawnPosY, spawnPosZ);
 
             vehicleObject = Instantiate(vehiclePrefabs[vehicleIndex], spawnPos, vehiclePrefabs[vehicleIndex].transform.rotation);
             objectCount += 1;
 
             HmdController hmd = player.GetComponent<HmdController>();
-            hmd.On(vehicleIndex);
+            hmd.On(vehicleIndex, spawnPosZ);
+
+            Direction direction = directionArrow.GetComponent<Direction>();
+            direction.PosZ(spawnPosZ);
+            direction.On();
 
             isSpawned = true;
         }
