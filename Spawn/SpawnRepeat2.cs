@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class SpawnRepeat2 : MonoBehaviour
 {
@@ -34,12 +36,14 @@ public class SpawnRepeat2 : MonoBehaviour
     private float maxSpawnInterval = 4.0f;
 
     public bool isGameOver = false;
+    public GameObject endUI;
+    public TextMeshProUGUI endText;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        endUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -90,6 +94,9 @@ public class SpawnRepeat2 : MonoBehaviour
             Debug.Log("##### TOTAL CONTACT COUNTS: " + count);
             float contactRate = (float)count / (float)objectCount;
             Debug.Log("##### CONTACT RATE: " + contactRate*100 + "%");
+
+            endUI.SetActive(true);
+            endText.text = "Mission Complete\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
         }
     }
 

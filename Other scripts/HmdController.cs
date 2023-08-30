@@ -28,6 +28,9 @@ public class HmdController : MonoBehaviour
         HMDs[1].SetActive(false);
         Debug.Log("Start HMD off");
 
+        directions[0].SetActive(false);
+        directions[1].SetActive(false);
+
         for (int i = 0; i < objects.Length; i++) {
             objects[i].SetActive(false);
             images[i].SetActive(false);
@@ -61,8 +64,10 @@ public class HmdController : MonoBehaviour
         times[k].SetActive(true);
         if (playerPosZ < z && z > 6.0f) {
             directions[0].SetActive(true);
+            Debug.Log("Directions left ON");
         } else {
             directions[1].SetActive(true);
+            Debug.Log("Directions right ON");
         }
     }
 }
