@@ -7,6 +7,8 @@ using TMPro;
 
 public class SpawnRepeat2 : MonoBehaviour
 {
+    public string playerName;
+
     public GameObject player;
     public float targetPositionX = 20;
     public float endPositionX = -35;
@@ -99,8 +101,9 @@ public class SpawnRepeat2 : MonoBehaviour
             float contactRate = (float)count / (float)objectCount;
             Debug.Log("##### CONTACT RATE: " + contactRate*100 + "%");
 
+            string finalText = "Mission Complete\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
             endUI.SetActive(true);
-            endText.text = "Mission Complete\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
+            endText.text = finalText;
         }
     }
 
