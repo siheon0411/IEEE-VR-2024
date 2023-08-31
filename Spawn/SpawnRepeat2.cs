@@ -19,6 +19,10 @@ public class SpawnRepeat2 : MonoBehaviour
     public int vehicleIndexMax = 4;
     private GameObject vehicleObject;
 
+    public float objectSpeed;
+    public float gap;
+    public float estimatedTime;
+
     private Vector3 spawnPos;
     private float spawnPosX;
     private float spawnPosY = 0;
@@ -106,15 +110,48 @@ public class SpawnRepeat2 : MonoBehaviour
             vehicleIndex = Random.Range(vehicleIndexMin, vehicleIndexMax + 1);
             vehiclePrefabs[vehicleIndex].SetActive(true);
 
-            spawnPosX = player.transform.position.x + Random.Range(10, 30);
+            gap = Random.Range(10, 30);
+            spawnPosX = player.transform.position.x + gap;
             spawnPosZ = Random.Range(5.5f, 7.1f);
             spawnPos = new Vector3(spawnPosX, spawnPosY, spawnPosZ);
+
+            // object별 속도 설정 -> 1 Unity Speed = 1m/s = 3.6km/h
+            // car:         30~50km/h   -> 8.33~13.88
+            // cycle:       15~30km/h   -> 4.16~8.33
+            // kickboard:   15~25km/h   -> 4.16~6.94
+            // motorcycle:  20~50km/h   -> 5.55~13.88
+
+            //if (vehicleIndex == 0) {            // car_builders
+            //    objectSpeed = Random.Range(8.33f, 13.88f);
+            //} else if (vehicleIndex == 1) {     // car_taxi
+            //    objectSpeed = Random.Range(8.33f, 13.88f);
+            //} else if (vehicleIndex == 2) {     // cyclist
+            //    objectSpeed = Random.Range(4.16f, 8.33f);
+            //} else if (vehicleIndex == 3) {     // kickboard
+            //    objectSpeed = Random.Range(4.16f, 6.94f);
+            //} else if (vehicleIndex == 4) {     // motorcycle
+            //    objectSpeed = Random.Range(5.55f, 13.88f);
+            //} else {                            // toy cars
+            //    objectSpeed = Random.Range(8.33f, 13.88f);
+            //}
 
             vehicleObject = Instantiate(vehiclePrefabs[vehicleIndex], spawnPos, vehiclePrefabs[vehicleIndex].transform.rotation);
             objectCount += 1;
 
+            if (vehicleIndex == 2) {                    // cyclist
+                objectSpeed = 6.94f;
+            } else if (vehicleIndex == 3) {             // kickboard
+                objectSpeed = 6.94f;
+            } else if (vehicleIndex == 4) {             // motorcycle
+                objectSpeed = 13.88f;
+            } else {                                    // cars
+                objectSpeed = 13.88f;
+            }
+
+            estimatedTime = gap / objectSpeed;
+
             HmdController hmd = player.GetComponent<HmdController>();
-            hmd.On(vehicleIndex, spawnPosZ);
+            hmd.On(vehicleIndex, spawnPosZ, objectSpeed, estimatedTime);
 
             Direction direction = directionArrow.GetComponent<Direction>();
             direction.PosZ(spawnPosZ);

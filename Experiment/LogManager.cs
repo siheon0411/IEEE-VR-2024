@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LogManager : MonoBehaviour
 {
-    public string name = "Prototype";
+    public string playerName = "Prototype";
     private string logFilePath;
 
     // Start is called before the first frame update
