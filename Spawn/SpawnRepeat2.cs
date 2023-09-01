@@ -7,7 +7,7 @@ using TMPro;
 
 public class SpawnRepeat2 : MonoBehaviour
 {
-    public string playerName;
+    public string playerName = null;
 
     public GameObject player;
     public float targetPositionX = 20;
@@ -91,7 +91,7 @@ public class SpawnRepeat2 : MonoBehaviour
         if (player.transform.position.x < endPositionX && !isGameOver) {
             isGameOver = true;
 
-            Debug.Log("##### MISSION COMPLETE");
+            Debug.Log("##### MISSION COMPLETE\n" + "Player: " + playerName);
             Debug.Log("##### TOTAL SPAWNED OBJECTS: " + objectCount);
 
             DetectCollision detectCount = detectCollision.GetComponent<DetectCollision>();
@@ -101,7 +101,7 @@ public class SpawnRepeat2 : MonoBehaviour
             float contactRate = (float)count / (float)objectCount;
             Debug.Log("##### CONTACT RATE: " + contactRate*100 + "%");
 
-            string finalText = "Mission Complete\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
+            string finalText = "Mission Complete\n" + "Player: " + playerName + "\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
             endUI.SetActive(true);
             endText.text = finalText;
         }

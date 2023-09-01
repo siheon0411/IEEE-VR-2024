@@ -55,11 +55,14 @@ public class HmdController : MonoBehaviour
     public void Off(int k) {
         HMDs[0].SetActive(false);    // HMD들 비활성화
         HMDs[1].SetActive(false);
+        //HMDs[2].SetActive(false);
+
+        directions[0].SetActive(false);
+        directions[1].SetActive(false);
+
         images[k].SetActive(false);
         speeds.SetActive(false);
         times.SetActive(false);
-        directions[0].SetActive(false);
-        directions[1].SetActive(false);
     }
 
     public void On(int k, float z, float speed, float time) {
