@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
+    public GameObject player;
+    public GameObject spawn;
+
     public TMP_InputField inputField;
     public TextMeshProUGUI inputText;
     
@@ -14,13 +17,13 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputField.onValueChanged.AddListener(UpdateInputText);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        inputText.text = playerCode;
+
     }
 
     public void UpdateInputText(string newText) {
@@ -28,16 +31,19 @@ public class InputManager : MonoBehaviour
         string combinedText = currentText + newText;
 
         inputField.text = combinedText;
+        Debug.Log("InputField: " + inputField.text);
+
+        playerCode = inputField.text;
+        Debug.Log("PlayerCode: " + playerCode);
     }
 
     public void InputButton() {
-        inputText.text = playerCode;
-        SpawnRepeat2 spawnRepeat2 = GetComponent<SpawnRepeat2>();
+        playerCode = inputField.text;
+        SpawnRepeat2 spawnRepeat2 = spawn.GetComponent<SpawnRepeat2>();
         spawnRepeat2.playerName = playerCode;
 
-        HmdController controller = GetComponent<HmdController>();
+        HmdController controller = player.GetComponent<HmdController>();
         controller.HMDs[2].SetActive(false);
-
     }
 
     public void KeyBoard0() {
