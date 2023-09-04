@@ -7,21 +7,19 @@ using UnityEngine.UI;
 
 public class LogManager : MonoBehaviour
 {
-    //public InputField playerNameInput;
-    public TextMeshProUGUI playerNameInputText;
+    public GameObject player;
+
     public string playerName;
-    private string logFilePath;
+    public string taskNumber;
+
+    private string message = "\n<Experiment Result>\n";
+
     private string resultFolderPath;
-    private bool isGameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // "Result" 폴더 경로 설정
-        resultFolderPath = Path.Combine(Application.persistentDataPath, "Result");
 
-        // "Result" 폴더가 없으면 생성
-        Directory.CreateDirectory(resultFolderPath);
     }
 
     // Update is called once per frame
@@ -30,32 +28,48 @@ public class LogManager : MonoBehaviour
         
     }
 
-    private void SaveExperimentResult(string resultText) {
-        // 파일명을 날짜와 시간으로 생성 (고유성을 위해)
-        string fileName = $"{playerName}_result_{System.DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
+    // 실험 결과를 txt파일을 생성해서 저장하는 함수
+    private void WritetxtFile(string resultText) {
+
+        // "Result" 폴더 경로 설정
+        resultFolderPath = Path.Combine(Application.persistentDataPath, "Result");
+
+        // "Result" 폴더가 없으면 생성
+        Directory.CreateDirectory(resultFolderPath);
+
+        if (Directory.Exists(resultFolderPath)) {
+            Debug.Log("Path exists" + resultFolderPath);
+        } else {
+            Debug.Log("Path doesn't exist");
+        }
+
+
+        string fileName = playerName + "_task" + taskNumber + "_result.txt";
 
         // 파일 경로 설정
         string filePath = Path.Combine(resultFolderPath, fileName);
 
+        Debug.Log(filePath);
+
         // 실험 결과를 파일에 저장
         File.WriteAllText(filePath, resultText);
-
-        Debug.Log("Experiment result saved.");
     }
 
-    // 실험 결과 저장을 테스트해보는 함수 (예시)
-    private void TestSaveResult() {
-        if (isGameOver) {
-            string experimentResult = "This is the result of the experiment.";
+    // 실험 결과를 SpawnRepeat2에서 불러오는 함수
+    public void SaveResult() {
+            
+        string experimentResult = "<Information>\n" + "Player Code: " + playerName + "\n" + "Task: " + taskNumber + "\n" + message;
 
-            // 실험 결과를 저장하는 함수 호출
-            SaveExperimentResult(experimentResult);
-        }
+        Debug.Log(experimentResult);
+
+        // 실험 결과를 저장하는 함수 호출
+        WritetxtFile(experimentResult);
+
     }
 
-    // 게임 오버 시 "isGameOver" 값을 true로 설정하고 결과 저장을 테스트
-    private void GameOver() {
-        isGameOver = true;
-        TestSaveResult();
+    public void LogRecorder(string mes) {
+        message += mes + "\n";
+        Debug.Log("in LogManager: " + message);
     }
+
 }

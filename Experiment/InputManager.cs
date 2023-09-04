@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
 {
     public GameObject player;
     public GameObject spawn;
+    public GameObject endUI;
 
     public TMP_InputField inputField;
     public TextMeshProUGUI inputText;
@@ -34,13 +35,17 @@ public class InputManager : MonoBehaviour
         Debug.Log("InputField: " + inputField.text);
 
         playerCode = inputField.text;
-        Debug.Log("PlayerCode: " + playerCode);
     }
 
     public void InputButton() {
         playerCode = inputField.text;
+        Debug.Log("Start Task by " + playerCode);
+
         SpawnRepeat2 spawnRepeat2 = spawn.GetComponent<SpawnRepeat2>();
         spawnRepeat2.playerName = playerCode;
+
+        LogManager logManager = endUI.GetComponent<LogManager>();
+        logManager.playerName = playerCode;
 
         HmdController controller = player.GetComponent<HmdController>();
         controller.HMDs[2].SetActive(false);

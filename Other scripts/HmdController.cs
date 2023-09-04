@@ -6,6 +6,8 @@ using UnityEngine;
 public class HmdController : MonoBehaviour
 {
     public GameObject player;
+    public GameObject endUI;
+
     private float playerPosZ;
 
     public GameObject[] objects;
@@ -66,19 +68,25 @@ public class HmdController : MonoBehaviour
     }
 
     public void On(int k, float z, float speed, float time) {
+
+        LogManager logManager = endUI.GetComponent<LogManager>();
+
         HMDs[0].SetActive(true);    // HMD들 활성화
         HMDs[1].SetActive(true);
         images[k].SetActive(true);
-        speeds.SetActive(true);
-        speedText.text = Mathf.Round(speed) + "km/h";
-        times.SetActive(true);
-        timeText.text = "contact in " + Mathf.Round(time) + "sec";
+        if (logManager.taskNumber == "5" || logManager.taskNumber == "6") {
+            speeds.SetActive(true);
+            speedText.text = Mathf.Round(speed) + "km/h";
+            times.SetActive(true);
+            timeText.text = "contact in " + Mathf.Round(time) + " sec";
+        }
+        
         if (playerPosZ < z && z > 6.0f) {
             directions[0].SetActive(true);
-            Debug.Log("Directions left ON");
+            //Debug.Log("Directions left ON");
         } else {
             directions[1].SetActive(true);
-            Debug.Log("Directions right ON");
+            //Debug.Log("Directions right ON");
         }
     }
 }

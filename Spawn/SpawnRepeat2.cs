@@ -10,8 +10,8 @@ public class SpawnRepeat2 : MonoBehaviour
     public string playerName = null;
 
     public GameObject player;
-    public float targetPositionX = 20;
-    public float endPositionX = -35;
+    public float targetPositionX;
+    public float endPositionX;
     private int objectCount = 0;
     public GameObject detectCollision;
 
@@ -74,7 +74,7 @@ public class SpawnRepeat2 : MonoBehaviour
             if (!timerOn) {
                 timerOn = true;
                 float delaySeconds = Random.Range(minSpawnInterval, maxSpawnInterval);
-                Debug.Log(delaySeconds);
+                //Debug.Log(delaySeconds);
 
                 timer = Time.time + delaySeconds;
             }
@@ -91,31 +91,52 @@ public class SpawnRepeat2 : MonoBehaviour
         if (player.transform.position.x < endPositionX && !isGameOver) {
             isGameOver = true;
 
-            Debug.Log("##### MISSION COMPLETE\n" + "Player: " + playerName);
-            Debug.Log("##### TOTAL SPAWNED OBJECTS: " + objectCount);
-
             DetectCollision detectCount = detectCollision.GetComponent<DetectCollision>();
             int count = detectCount.totalCount;
 
-            Debug.Log("##### TOTAL CONTACT COUNTS: " + count);
-            float contactRate = (float)count / (float)objectCount;
-            Debug.Log("##### CONTACT RATE: " + contactRate*100 + "%");
+            float contactRate = (float)count / (float)objectCount * 100;
 
-            string finalText = "Mission Complete\n" + "Player: " + playerName + "\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
+            string finalText = "<Mission Complete>\n" + "Player: " + playerName + "\n" + "Total Objects: " + objectCount + "\n" + "Contact: " + count + "\n" + "Contact Rate: " + contactRate + "%";
             endUI.SetActive(true);
             endText.text = finalText;
+
+            Debug.Log("##### " + finalText);
+
+            LogManager logManager = endUI.GetComponent<LogManager>();
+            logManager.LogRecorder("\n" + finalText);
+            logManager.SaveResult();
+
+
         }
     }
 
     void SpawnRandomVehicle() {
 
         if (!isGameOver && !isSpawned) {
-            vehicleIndex = Random.Range(vehicleIndexMin, vehicleIndexMax + 1);
+
+            LogManager logManager = endUI.GetComponent<LogManager>();
+            if (logManager.taskNumber == "2" || logManager.taskNumber == "4" || logManager.taskNumber == "6") {
+                vehicleIndex = Random.Range(vehicleIndexMin, vehicleIndexMax + 1);
+            } else {
+                vehicleIndex = Random.Range(0, 2);
+            }
+            Debug.Log("vehicle index: " +  vehicleIndex);
             vehiclePrefabs[vehicleIndex].SetActive(true);
 
+            // spawnPosX 설정
             gap = Random.Range(10, 30);
-            spawnPosX = player.transform.position.x + gap;
-            spawnPosZ = Random.Range(5.5f, 7.1f);
+            if (logManager.taskNumber == "2" || logManager.taskNumber == "4" || logManager.taskNumber == "6") {
+                spawnPosX = player.transform.position.x + gap;
+            } else {
+                spawnPosX = 53.0f;
+            }
+
+            // spawnPosZ 설정
+            if (logManager.taskNumber == "2" || logManager.taskNumber == "4" || logManager.taskNumber == "6") {
+                spawnPosZ = Random.Range(5.5f, 7.1f);
+            } else {
+                spawnPosZ = 3.3f;
+            }
             spawnPos = new Vector3(spawnPosX, spawnPosY, spawnPosZ);
 
             // object별 속도 설정 -> 1 Unity Speed = 1m/s = 3.6km/h
@@ -151,14 +172,20 @@ public class SpawnRepeat2 : MonoBehaviour
                 objectSpeed = 13.88f;
             }
 
+            objectSpeed = objectSpeed * 3.6f;
+
             estimatedTime = gap / objectSpeed;
 
-            HmdController hmd = player.GetComponent<HmdController>();
-            hmd.On(vehicleIndex, spawnPosZ, objectSpeed, estimatedTime);
+            if (logManager.taskNumber == "3" || logManager.taskNumber == "4" || logManager.taskNumber == "5" || logManager.taskNumber == "6") {
 
-            Direction direction = directionArrow.GetComponent<Direction>();
-            direction.PosZ(spawnPosZ);
-            direction.On();
+                HmdController hmd = player.GetComponent<HmdController>();
+                hmd.On(vehicleIndex, spawnPosZ, objectSpeed, estimatedTime);
+
+                Direction direction = directionArrow.GetComponent<Direction>();
+                direction.PosZ(spawnPosZ);
+                direction.On();
+
+            }
 
             isSpawned = true;
         }
