@@ -38,7 +38,7 @@ public class LogManager : MonoBehaviour
         Directory.CreateDirectory(resultFolderPath);
 
         if (Directory.Exists(resultFolderPath)) {
-            Debug.Log("Path exists" + resultFolderPath);
+            Debug.Log("Path exists\n" + resultFolderPath);
         } else {
             Debug.Log("Path doesn't exist");
         }
@@ -60,7 +60,7 @@ public class LogManager : MonoBehaviour
             
         string experimentResult = "<Information>\n" + "Player Code: " + playerName + "\n" + "Task: " + taskNumber + "\n" + message;
 
-        Debug.Log(experimentResult);
+        //Debug.Log(experimentResult);
 
         // 실험 결과를 저장하는 함수 호출
         WritetxtFile(experimentResult);
@@ -69,7 +69,6 @@ public class LogManager : MonoBehaviour
 
     public void LogRecorder(string mes) {
         message += mes + "\n";
-        Debug.Log("in LogManager: " + message);
     }
 
 }
